@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>TOTAL SCHOOL EDUCATION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --dark-blue: #14213d;
+            --orange: #fca311;
+            --white: #fff;
+            --gray: #e5e5e5;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--gray);
+        }
+        .language-menu {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--dark-blue);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .language-menu h2 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .flags {
+            display: flex;
+            gap: 40px;
+        }
+        .flag-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .flag-btn:hover {
+            transform: scale(1.1);
+        }
+        .flag-img {
+            width: 64px;
+            height: 48px;
+            border-radius: 8px;
+            border: 2px solid var(--orange);
+            background: var(--white);
+        }
+        /* Header */
+        .header {
+            background: var(--dark-blue);
+            color: var(--white);
+            padding: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+        .header-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-left: 32px;
+            letter-spacing: 2px;
+        }
+        .header-flags {
+            display: flex;
+            gap: 16px;
+            margin-right: 32px;
+        }
+        .header-flag-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .header-flag-img {
+            width: 32px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid var(--orange);
+            background: var(--white);
+        }
+        /* Orange line */
+        .orange-line {
+            height: 5px;
+            background: var(--orange);
+            width: 100%;
+        }
+        /* Main menu */
+        .main-menu {
+            background: var(--dark-blue);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 48px;
+            height: 50px;
+            font-size: 1.1rem;
+        }
+        .main-menu-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0 16px;
+            transition: color 0.2s;
+        }
+        .main-menu-btn:hover {
+            color: var(--orange);
+        }
+        /* Main content */
+        .main-content {
+            max-width: 900px;
+            margin: 40px auto 0 auto;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(20,33,61,0.08);
+            padding: 32px;
+        }
+        .main-content h1 {
+            color: var(--dark-blue);
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+        }
+        .main-content p {
+            font-size: 1.2rem;
+            color: #222;
+            margin-bottom: 24px;
+        }
+        /* Lessons section */
+        .lessons-section {
+            margin-top: 32px;
+        }
+        .lesson-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(20,33,61,0.06);
+            font-size: 1.1rem;
+        }
+        .lesson-card.blue {
+            background: var(--dark-blue);
+            color: var(--white);
+        }
+        .lesson-card.orange {
+            background: var(--orange);
+            color: var(--dark-blue);
+        }
+        .lesson-info {
+            max-width: 70%;
+        }
+        .lesson-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .lesson-desc {
+            margin-bottom: 8px;
+        }
+        .lesson-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .lesson-card.blue .lesson-btn {
+            background: var(--orange);
+            color: var(--dark-blue);
+        }
+        .lesson-card.orange .lesson-btn {
+            background: var(--dark-blue);
+            color: var(--white);
+        }
+        /* Modal */
+        .modal-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(20,33,61,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(20,33,61,0.18);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-blue);
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--dark-blue);
+        }
+        .modal-desc {
+            margin-bottom: 18px;
+            color: #222;
+        }
+        .modal-link-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            background: var(--orange);
+            color: var(--dark-blue);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        /* Info section */
+        .info-section {
+            margin-top: 32px;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .info-card {
+            background: var(--dark-blue);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            flex: 1 1 300px;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .info-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .info-contact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .info-contact img {
+            width: 28px;
+            height: 28px;
+        }
+        .info-contact span {
+            font-size: 1.1rem;
+        }
+        /* Location section */
+        .location-section {
+            margin-top: 32px;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .location-card {
+            background: var(--dark-blue);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            flex: 1 1 300px;
+            min-width: 260px;
+            margin-bottom: 16px;
+        }
+        .location-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .map-frame {
+            width: 100%;
+            height: 220px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .video-frame {
+            width: 100%;
+            height: 220px;
+            border: none;
+            border-radius: 8px;
+        }
+        @media (max-width: 700px) {
+            .main-content {
+                padding: 12px;
+            }
+            .info-section, .location-section {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language selection menu -->
+    <div class="language-menu" id="languageMenu">
+        <h2>Выберите язык / Tilni tanlang / Select language</h2>
+        <div class="flags">
+            <button class="flag-btn" onclick="setLanguage('ru')">
+                <img class="flag-img" src="https://flagcdn.com/ru.svg" alt="Русский">
+            </button>
+            <button class="flag-btn" onclick="setLanguage('en')">
+                <img class="flag-img" src="https://flagcdn.com/gb.svg" alt="English">
+            </button>
+            <button class="flag-btn" onclick="setLanguage('uz')">
+                <img class="flag-img" src="https://flagcdn.com/uz.svg" alt="Oʻzbek">
+            </button>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">TOTAL SCHOOL EDUCATION</div>
+        <div class="header-flags">
+            <button class="header-flag-btn" onclick="setLanguage('ru')">
+                <img class="header-flag-img" src="https://flagcdn.com/ru.svg" alt="Русский">
+            </button>
+            <button class="header-flag-btn" onclick="setLanguage('en')">
+                <img class="header-flag-img" src="https://flagcdn.com/gb.svg" alt="English">
+            </button>
+            <button class="header-flag-btn" onclick="setLanguage('uz')">
+                <img class="header-flag-img" src="https://flagcdn.com/uz.svg" alt="Oʻzbek">
+            </button>
+        </div>
+    </div>
+    <div class="orange-line"></div>
+    <!-- Main menu -->
+    <div class="main-menu">
+        <button class="main-menu-btn" onclick="showSection('lessons')"><span id="menuLessons">Записаться на урок</span></button>
+        <button class="main-menu-btn" onclick="showSection('info')"><span id="menuInfo">Более точная информация</span></button>
+        <button class="main-menu-btn" onclick="showSection('location')"><span id="menuLocation">Расположение</span></button>
+    </div>
+    <!-- Main content -->
+    <div class="main-content" id="mainContent">
+        <h1 id="mainTitle">Добро пожаловать в TOTAL SCHOOL EDUCATION!</h1>
+        <p id="mainDesc">
+            Наш учебный центр — это место, где опыт и профессионализм сочетаются с заботой о каждом ученике. Мы гордимся тем, что наши студенты достигают выдающихся результатов на экзаменах IELTS и TOEFL, получая практически максимальные баллы. В нашем центре работает один из лучших математиков, а команда преподавателей — это настоящие эксперты, обладающие глубокими знаниями и искренней любовью к своему делу. Присоединяйтесь к нам и откройте путь к успеху вместе с TOTAL SCHOOL EDUCATION!
+        </p>
+    </div>
+    <!-- Lessons section -->
+    <div class="main-content lessons-section" id="lessonsSection" style="display:none;">
+        <h1 id="lessonsTitle">Записаться на урок</h1>
+        <div id="lessonsList"></div>
+    </div>
+    <!-- Info section -->
+    <div class="main-content info-section" id="infoSection" style="display:none;">
+        <div class="info-card">
+            <div class="info-title" id="infoTelegramTitle">Telegram</div>
+            <div class="info-contact">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+                <span>@ADM_TES</span>
+            </div>
+        </div>
+        <div class="info-card">
+            <div class="info-title" id="infoHotlineTitle">Горячая линия</div>
+            <div class="info-contact">
+                <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Phone">
+                <span>+998 95 512 22 27</span>
+            </div>
+        </div>
+    </div>
+    <!-- Location section -->
+    <div class="main-content location-section" id="locationSection" style="display:none;">
+        <div class="location-card">
+            <div class="location-title" id="locationMapTitle">Наше расположение</div>
+            <iframe class="map-frame"
+                src="https://maps.google.com/maps?q=41.3283868,69.3264784&z=16&output=embed"
+                allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div class="location-card">
+            <div class="location-title" id="locationVideoTitle">Видео о центре</div>
+            <iframe class="video-frame"
+                src="https://www.youtube.com/embed/IDBlKFBgS7o"
+                title="YouTube video" allowfullscreen></iframe>
+        </div>
+    </div>
+    <!-- Modal for lesson details -->
+    <div class="modal-bg" id="modalBg">
+        <div class="modal" id="modalWindow">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <a class="modal-link-btn" id="modalLinkBtn" href="https://forms.gle/Gnv8xHi1RemQq8Lc7" target="_blank">Записаться</a>
+        </div>
+    </div>
+    <script>
+        // Языки
+        const translations = {
+            ru: {
+                mainTitle: "Добро пожаловать в TOTAL SCHOOL EDUCATION!",
+                mainDesc: "Наш учебный центр — это место, где опыт и профессионализм сочетаются с заботой о каждом ученике. Мы гордимся тем, что наши студенты достигают выдающихся результатов на экзаменах IELTS и TOEFL, получая практически максимальные баллы. В нашем центре работает один из лучших математиков, а команда преподавателей — это настоящие эксперты, обладающие глубокими знаниями и искренней любовью к своему делу. Присоединяйтесь к нам и откройте путь к успеху вместе с TOTAL SCHOOL EDUCATION!",
+                menuLessons: "Записаться на урок",
+                menuInfo: "Более точная информация",
+                menuLocation: "Расположение",
+                lessonsTitle: "Записаться на урок",
+                infoTelegramTitle: "Telegram",
+                infoHotlineTitle: "Горячая линия",
+                locationMapTitle: "Наше расположение",
+                locationVideoTitle: "Видео о центре",
+                lessonBtn: "Записаться на урок",
+                modalBtn: "Записаться",
+                lessons: [
+                    {
+                        title: "Английский для взрослых",
+                        desc: "3 раза в неделю: понедельник, среда и пятница или вторник, четверг и суббота. 800 000 сум/месяц.",
+                        details: "Английский для взрослых: занятия проходят 3 раза в неделю (понедельник, среда и пятница или вторник, четверг и суббота). Стоимость — 800 000 сум/месяц. Продолжительность урока — 1.5 часа."
+                    },
+                    {
+                        title: "Английский для детей",
+                        desc: "3 раза в неделю: понедельник, среда и пятница или вторник, четверг и суббота. 600 000 сум/месяц.",
+                        details: "Английский для детей: занятия проходят 3 раза в неделю (понедельник, среда и пятница или вторник, четверг и суббота). Стоимость — 600 000 сум/месяц. Продолжительность урока — 1.5 часа."
+                    },
+                    {
+                        title: "Математика регулярная",
+                        desc: "3 раза в любое доступное время, кроме воскресенья. Без лимита с 9:00 до 18:00. 800 000 сум/месяц.",
+                        details: "Математика регулярная: занятия проходят 3 раза в любое доступное время, кроме воскресенья. Стоимость — 800 000 сум/месяц. Продолжительность урока — без лимита с 9:00 до 18:00."
+                    },
+                    {
+                        title: "Математика интенсив",
+                        desc: "5 раз в любое доступное время, кроме воскресенья. Без лимита с 9:00 до 18:00. 1 200 000 сум/месяц.",
+                        details: "Математика интенсив: занятия проходят 5 раз в любое доступное время, кроме воскресенья. Стоимость — 1 200 000 сум/месяц. Продолжительность урока — без лимита с 9:00 до 18:00."
+                    },
+                    {
+                        title: "Рисование",
+                        desc: "3 раза в неделю: понедельник, среда и пятница или вторник, четверг и суббота. 800 000 сум/месяц.",
+                        details: "Рисование: занятия проходят 3 раза в неделю (понедельник, среда и пятница или вторник, четверг и суббота). Стоимость — 800 000 сум/месяц. Продолжительность урока — 1.5 часа."
+                    },
+                    {
+                        title: "Уроки гитары",
+                        desc: "3 раза в неделю: понедельник, среда и пятница или вторник, четверг и суббота. 800 000 сум/месяц.",
+                        details: "Уроки гитары: занятия проходят 3 раза в неделю (понедельник, среда и пятница или вторник, четверг и суббота). Стоимость — 800 000 сум/месяц. Продолжительность урока — 1.5 часа."
+                    },
+                    {
+                        title: "Фортепиано",
+                        desc: "Индивидуальное расписание. Индивидуальная цена.",
+                        details: "Фортепиано: индивидуальное расписание и индивидуальная цена. Свяжитесь с нами для уточнения."
+                    }
+                ]
+            },
+            en: {
+                mainTitle: "Welcome to TOTAL SCHOOL EDUCATION!",
+                mainDesc: "Our educational center is a place where experience and professionalism meet care for every student. We are proud that our students achieve outstanding results in IELTS and TOEFL exams, scoring almost the highest marks. We have one of the best mathematicians, and our team of teachers are true experts with deep knowledge and a genuine passion for teaching. Join us and open the path to success with TOTAL SCHOOL EDUCATION!",
+                menuLessons: "Sign up for a lesson",
+                menuInfo: "More information",
+                menuLocation: "Location",
+                lessonsTitle: "Sign up for a lesson",
+                infoTelegramTitle: "Telegram",
+                infoHotlineTitle: "Hotline",
+                locationMapTitle: "Our location",
+                locationVideoTitle: "Center video",
+                lessonBtn: "Sign up",
+                modalBtn: "Sign up",
+                lessons: [
+                    {
+                        title: "English for Adults",
+                        desc: "3 times a week: Monday, Wednesday, Friday or Tuesday, Thursday, Saturday. 800,000 UZS/month.",
+                        details: "English for Adults: Classes are held 3 times a week (Monday, Wednesday, Friday or Tuesday, Thursday, Saturday). Price — 800,000 UZS/month. Lesson duration — 1.5 hours."
+                    },
+                    {
+                        title: "English for Children",
+                        desc: "3 times a week: Monday, Wednesday, Friday or Tuesday, Thursday, Saturday. 600,000 UZS/month.",
+                        details: "English for Children: Classes are held 3 times a week (Monday, Wednesday, Friday or Tuesday, Thursday, Saturday). Price — 600,000 UZS/month. Lesson duration — 1.5 hours."
+                    },
+                    {
+                        title: "Regular Mathematics",
+                        desc: "3 times at any available time except Sunday. No limit from 9:00 to 18:00. 800,000 UZS/month.",
+                        details: "Regular Mathematics: Classes are held 3 times at any available time except Sunday. Price — 800,000 UZS/month. Lesson duration — no limit from 9:00 to 18:00."
+                    },
+                    {
+                        title: "Intensive Mathematics",
+                        desc: "5 times at any available time except Sunday. No limit from 9:00 to 18:00. 1,200,000 UZS/month.",
+                        details: "Intensive Mathematics: Classes are held 5 times at any available time except Sunday. Price — 1,200,000 UZS/month. Lesson duration — no limit from 9:00 to 18:00."
+                    },
+                    {
+                        title: "Drawing",
+                        desc: "3 times a week: Monday, Wednesday, Friday or Tuesday, Thursday, Saturday. 800,000 UZS/month.",
+                        details: "Drawing: Classes are held 3 times a week (Monday, Wednesday, Friday or Tuesday, Thursday, Saturday). Price — 800,000 UZS/month. Lesson duration — 1.5 hours."
+                    },
+                    {
+                        title: "Guitar Lessons",
+                        desc: "3 times a week: Monday, Wednesday, Friday or Tuesday, Thursday, Saturday. 800,000 UZS/month.",
+                        details: "Guitar Lessons: Classes are held 3 times a week (Monday, Wednesday, Friday or Tuesday, Thursday, Saturday). Price — 800,000 UZS/month. Lesson duration — 1.5 hours."
+                    },
+                    {
+                        title: "Piano",
+                        desc: "Individual schedule. Individual price.",
+                        details: "Piano: Individual schedule and price. Contact us for details."
+                    }
+                ]
+            },
+            uz: {
+                mainTitle: "TOTAL SCHOOL EDUCATIONga xush kelibsiz!",
+                mainDesc: "Bizning o‘quv markazimiz — tajriba va professionallik har bir o‘quvchiga g‘amxo‘rlik bilan uyg‘unlashgan joy. Talabalarimiz IELTS va TOEFL imtihonlarida deyarli eng yuqori ballarni olishadi. Markazimizda eng yaxshi matematiklardan biri ishlaydi, o‘qituvchilarimiz esa o‘z ishini chin dildan sevuvchi haqiqiy mutaxassislardir. Bizga qo‘shiling va TOTAL SCHOOL EDUCATION bilan muvaffaqiyat sari yo‘l oching!",
+                menuLessons: "Darsga yozilish",
+                menuInfo: "Batafsil ma'lumot",
+                menuLocation: "Manzil",
+                lessonsTitle: "Darsga yozilish",
+                infoTelegramTitle: "Telegram",
+                infoHotlineTitle: "Ishonch telefoni",
+                locationMapTitle: "Bizning manzil",
+                locationVideoTitle: "Markaz haqida video",
+                lessonBtn: "Darsga yozilish",
+                modalBtn: "Yozilish",
+                lessons: [
+                    {
+                        title: "Kattalar uchun ingliz tili",
+                        desc: "Haftada 3 marta: dushanba, chorshanba, juma yoki seshanba, payshanba, shanba. 800 000 so‘m/oy.",
+                        details: "Kattalar uchun ingliz tili: darslar haftada 3 marta (dushanba, chorshanba, juma yoki seshanba, payshanba, shanba). Narxi — 800 000 so‘m/oy. Dars davomiyligi — 1,5 soat."
+                    },
+                    {
+                        title: "Bolalar uchun ingliz tili",
+                        desc: "Haftada 3 marta: dushanba, chorshanba, juma yoki seshanba, payshanba, shanba. 600 000 so‘m/oy.",
+                        details: "Bolalar uchun ingliz tili: darslar haftada 3 marta (dushanba, chorshanba, juma yoki seshanba, payshanba, shanba). Narxi — 600 000 so‘m/oy. Dars davomiyligi — 1,5 soat."
+                    },
+                    {
+                        title: "Oddiy matematika",
+                        desc: "Haftada 3 marta, yakshanba bundan mustasno. Cheklovsiz 9:00 dan 18:00 gacha. 800 000 so‘m/oy.",
+                        details: "Oddiy matematika: darslar haftada 3 marta, yakshanba bundan mustasno. Narxi — 800 000 so‘m/oy. Dars davomiyligi — cheklovsiz 9:00 dan 18:00 gacha."
+                    },
+                    {
+                        title: "Intensiv matematika",
+                        desc: "Haftada 5 marta, yakshanba bundan mustasno. Cheklovsiz 9:00 dan 18:00 gacha. 1 200 000 so‘m/oy.",
+                        details: "Intensiv matematika: darslar haftada 5 marta, yakshanba bundan mustasno. Narxi — 1 200 000 so‘m/oy. Dars davomiyligi — cheklovsiz 9:00 dan 18:00 gacha."
+                    },
+                    {
+                        title: "Rassomlik",
+                        desc: "Haftada 3 marta: dushanba, chorshanba, juma yoki seshanba, payshanba, shanba. 800 000 so‘m/oy.",
+                        details: "Rassomlik: darslar haftada 3 marta (dushanba, chorshanba, juma yoki seshanba, payshanba, shanba). Narxi — 800 000 so‘m/oy. Dars davomiyligi — 1,5 soat."
+                    },
+                    {
+                        title: "Gitara darslari",
+                        desc: "Haftada 3 marta: dushanba, chorshanba, juma yoki seshanba, payshanba, shanba. 800 000 so‘m/oy.",
+                        details: "Gitara darslari: darslar haftada 3 marta (dushanba, chorshanba, juma yoki seshanba, payshanba, shanba). Narxi — 800 000 so‘m/oy. Dars davomiyligi — 1,5 soat."
+                    },
+                    {
+                        title: "Fortepiano",
+                        desc: "Individual jadval. Individual narx.",
+                        details: "Fortepiano: individual jadval va narx. Batafsil ma'lumot uchun biz bilan bog'laning."
+                    }
+                ]
+            }
+        };
+
+        let currentLang = 'ru';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('languageMenu').style.display = 'none';
+            updateTexts();
+        }
+
+        function updateTexts() {
+            const t = translations[currentLang];
+            document.getElementById('mainTitle').innerText = t.mainTitle;
+            document.getElementById('mainDesc').innerText = t.mainDesc;
+            document.getElementById('menuLessons').innerText = t.menuLessons;
+            document.getElementById('menuInfo').innerText = t.menuInfo;
+            document.getElementById('menuLocation').innerText = t.menuLocation;
+            document.getElementById('lessonsTitle').innerText = t.lessonsTitle;
+            document.getElementById('infoTelegramTitle').innerText = t.infoTelegramTitle;
+            document.getElementById('infoHotlineTitle').innerText = t.infoHotlineTitle;
+            document.getElementById('locationMapTitle').innerText = t.locationMapTitle;
+            document.getElementById('locationVideoTitle').innerText = t.locationVideoTitle;
+            renderLessons();
+        }
+
+        function showSection(section) {
+            document.getElementById('mainContent').style.display = section === 'main' ? '' : 'none';
+            document.getElementById('lessonsSection').style.display = section === 'lessons' ? '' : 'none';
+            document.getElementById('infoSection').style.display = section === 'info' ? '' : 'none';
+            document.getElementById('locationSection').style.display = section === 'location' ? '' : 'none';
+        }
+
+        function renderLessons() {
+            const t = translations[currentLang];
+            const lessonsList = document.getElementById('lessonsList');
+            lessonsList.innerHTML = '';
+            t.lessons.forEach((lesson, idx) => {
+                const isBlue = idx % 2 === 0;
+                const card = document.createElement('div');
+                card.className = 'lesson-card ' + (isBlue ? 'blue' : 'orange');
+                card.innerHTML = `
+                    <div class="lesson-info">
+                        <div class="lesson-title">${lesson.title}</div>
+                        <div class="lesson-desc">${lesson.desc}</div>
+                    </div>
+                    <button class="lesson-btn" onclick="openModal(${idx})">${t.lessonBtn}</button>
+                `;
+                lessonsList.appendChild(card);
+            });
+        }
+
+        function openModal(idx) {
+            const t = translations[currentLang];
+            document.getElementById('modalTitle').innerText = t.lessons[idx].title;
+            document.getElementById('modalDesc').innerText = t.lessons[idx].details;
+            document.getElementById('modalLinkBtn').innerText = t.modalBtn;
+            document.getElementById('modalBg').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalBg').style.display = 'none';
+        }
+
+        // Скрыть все секции кроме главной при старте
+        showSection('main');
+
+        // Если язык уже выбран, скрыть меню
+        if (window.localStorage.getItem('tes_lang')) {
+            setLanguage(window.localStorage.getItem('tes_lang'));
+            document.getElementById('languageMenu').style.display = 'none';
+        }
+
+        // Сохранять язык
+        function setLanguage(lang) {
+            currentLang = lang;
+            window.localStorage.setItem('tes_lang', lang);
+            document.getElementById('languageMenu').style.display = 'none';
+            updateTexts();
+            showSection('main');
+        }
+
+        // При загрузке страницы
+        window.onload = function() {
+            updateTexts();
+        };
+    </script>
+</body>
+</html>
